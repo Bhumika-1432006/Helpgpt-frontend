@@ -2,7 +2,7 @@ import "./Sidebar.css";
 import { useContext, useEffect } from "react";
 import { MyContext } from "./MyContent.jsx";
 import { v1 as uuidv1 } from "uuid";
-
+import blackLogo from "./assets/blacklogo.png";
 function Sidebar() {
   const {
     allThreads, setAllThreads,
@@ -58,7 +58,7 @@ function Sidebar() {
   return (
     <section className={`sidebar ${theme} ${showSidebar ? "active" : ""}`}>
       <button onClick={createNewChat} className="new-chat-btn">
-        <img src="src/assets/blacklogo.png" alt="logo" className="logo" />
+      <img src={blackLogo} alt="logo" className="logo" />
         <span><i className="fa-solid fa-pen-to-square"></i></span>
       </button>
 
