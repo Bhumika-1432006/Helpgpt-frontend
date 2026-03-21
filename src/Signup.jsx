@@ -2,9 +2,9 @@ import { useState, useContext, useEffect } from "react";
 import { MyContext } from "./MyContent";
 import "./Signup.css";
 
-function Signup() {
+// ADDED: Destructured onAuthSuccess from props
+function Signup({ onAuthSuccess }) {
   const { theme } = useContext(MyContext);
-  // Fixed this line to include the setter function
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -19,7 +19,6 @@ function Signup() {
     e.preventDefault();
 
     try {
-      // API call to your live Render backend
       const response = await fetch("https://helpgpt-backend.onrender.com/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -29,10 +28,11 @@ function Signup() {
       const data = await response.json();
 
       if (response.ok) {
-        // Save userId in localStorage to keep user logged in
         localStorage.setItem("userId", data.userId);
         alert(`Welcome, ${data.username}! Account created successfully!`);
-        window.location.href = "/"; // Redirect to chat
+        
+        // --- UPDATED: Tell App.js to hide the overlay ---
+        if(onAuthSuccess) onAuthSuccess(); 
       } else {
         alert(data.error || "Signup failed");
       }

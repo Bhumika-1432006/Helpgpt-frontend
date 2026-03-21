@@ -1,6 +1,7 @@
 import './App.css';
 import Sidebar from './Sidebar.jsx';
 import ChatWindow from './ChatWindow.jsx';
+import Signup from './Signup.jsx'; // Import Signup
 import { MyContext } from './MyContent.jsx';
 import { useState, useEffect } from 'react';
 import { v1 as uuidv1 } from "uuid";
@@ -13,13 +14,14 @@ function App() {
   const [newChat, setNewChat] = useState(true);
   const [allThreads, setAllThreads] = useState([]);
   
+  // ADDED: Auth state to track if we should show the overlay
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('userId'));
+
   // Theme state
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
 
-  // --- THE CRITICAL MISSING PIECE FOR THE HAMBURGER ---
   const [showSidebar, setShowSidebar] = useState(false);
 
-  // Sync theme with body attribute
   useEffect(() => {
     document.body.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
@@ -40,7 +42,6 @@ function App() {
     setAllThreads,
     theme,
     setTheme,
-    // --- EXPOSING THE TOGGLE STATE TO SIDEBAR & CHATWINDOW ---
     showSidebar,
     setShowSidebar 
   };
@@ -50,6 +51,13 @@ function App() {
       <MyContext.Provider value={providerValues}>
         <Sidebar />
         <ChatWindow />
+
+        {/* --- ADDED: THE OVERLAY LOGIC --- */}
+        {!isLoggedIn && (
+          <div className="auth-overlay">
+             <Signup onAuthSuccess={() => setIsLoggedIn(true)} />
+          </div>
+        )}
       </MyContext.Provider>
     </div>
   );
