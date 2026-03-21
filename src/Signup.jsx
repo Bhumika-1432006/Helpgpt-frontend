@@ -1,15 +1,14 @@
-// Signup.jsx
 import { useState, useContext, useEffect } from "react";
 import { MyContext } from "./MyContent";
 import "./Signup.css";
 
 function Signup() {
   const { theme } = useContext(MyContext);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = {
     username: "",
     email: "",
     password: "",
-  });
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,13 +20,12 @@ function Signup() {
     // Example placeholder for backend request
     console.log("User details:", formData);
 
-    // Here you would send data to backend using fetch/axios:
-    // await fetch("http://localhost:8080/api/signup", { method: "POST", ... })
+    // Update the URL here
+    // await fetch("https://helpgpt-backend.onrender.com/api/signup", { method: "POST", ... })
 
     alert("Account created successfully!");
   };
 
-  // Apply theme automatically
   useEffect(() => {
     document.body.setAttribute("data-theme", theme);
   }, [theme]);
