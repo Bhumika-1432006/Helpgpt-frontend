@@ -4,26 +4,42 @@ import "./Signup.css";
 
 function Signup() {
   const { theme } = useContext(MyContext);
-  const [formData, setFormData] = {
+  // Fixed this line to include the setter function
+  const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
-  };
+  });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Example placeholder for backend request
-    console.log("User details:", formData);
+    try {
+      // API call to your live Render backend
+      const response = await fetch("https://helpgpt-backend.onrender.com/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    // Update the URL here
-    // await fetch("https://helpgpt-backend.onrender.com/api/signup", { method: "POST", ... })
+      const data = await response.json();
 
-    alert("Account created successfully!");
+      if (response.ok) {
+        // Save userId in localStorage to keep user logged in
+        localStorage.setItem("userId", data.userId);
+        alert(`Welcome, ${data.username}! Account created successfully!`);
+        window.location.href = "/"; // Redirect to chat
+      } else {
+        alert(data.error || "Signup failed");
+      }
+    } catch (err) {
+      console.log("Signup Error:", err);
+      alert("Something went wrong with the server.");
+    }
   };
 
   useEffect(() => {

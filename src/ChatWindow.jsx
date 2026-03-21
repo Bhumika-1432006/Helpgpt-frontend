@@ -25,11 +25,16 @@ function ChatWindow() {
   if (!setPrompt) return null;
 
   const getReply = async () => {
+    const userId = localStorage.getItem("userId"); // ADDED THIS LINE
     setLoading(true);
     const options = {
       method: "POST",
       headers: { "Content-Type" : "application/json" },
-      body: JSON.stringify({ message: prompt, threadId: currThreadId })
+      body: JSON.stringify({ 
+        message: prompt, 
+        threadId: currThreadId, 
+        userId: userId // ADDED userId TO THE BODY
+      })
     };
 
     try {

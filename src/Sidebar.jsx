@@ -3,6 +3,7 @@ import { useContext, useEffect } from "react";
 import { MyContext } from "./MyContent.jsx";
 import { v1 as uuidv1 } from "uuid";
 import blackLogo from "./assets/blacklogo.png";
+
 function Sidebar() {
   const {
     allThreads, setAllThreads,
@@ -12,9 +13,15 @@ function Sidebar() {
     showSidebar, setShowSidebar
   } = useContext(MyContext);
 
+  // Get the logged-in user's ID
+  const userId = localStorage.getItem("userId");
+
   const getAllThreads = async () => {
+    if (!userId) return; // Don't fetch if no user is logged in
+    
     try {
-      const response = await fetch("https://helpgpt-backend.onrender.com/api/thread");
+      // UPDATED: Now calling the user-specific route
+      const response = await fetch(`https://helpgpt-backend.onrender.com/api/thread/${userId}`);
       const res = await response.json();
       const filteredData = res.map((thread) => ({
         threadId: thread.threadId,
@@ -24,7 +31,7 @@ function Sidebar() {
     } catch (err) { console.log(err); }
   };
 
-  useEffect(() => { getAllThreads(); }, [currThreadId]);
+  useEffect(() => { getAllThreads(); }, [currThreadId, userId]);
 
   const createNewChat = () => {
     setNewChat(true);
@@ -38,7 +45,8 @@ function Sidebar() {
   const changeThread = async (newThreadId) => {
     setCurrThreadId(newThreadId);
     try {
-      const response = await fetch(`https://helpgpt-backend.onrender.com/api/thread/${newThreadId}`);
+      // UPDATED: Using the content-specific sub-route we added to backend
+      const response = await fetch(`https://helpgpt-backend.onrender.com/api/thread/content/${newThreadId}`);
       const res = await response.json();
       setPrevChats(res);
       setNewChat(false);
