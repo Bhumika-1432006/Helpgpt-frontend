@@ -194,11 +194,12 @@
   cursor: pointer;
   transition: background 0.3s ease;
   margin-top: 10px;
-  align-content: center;
+ 
 }
 
 .signup-box button:hover {
   background-color: #0d8a6a;
+  align-items: center;
 }
 
 .login-note {
