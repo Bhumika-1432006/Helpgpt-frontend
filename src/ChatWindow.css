@@ -341,31 +341,43 @@ input {
   padding: 10px;
   width: 200px;            /* Set a consistent width for the dropdown box */
 }
+/* Ensure the wrapper actually wraps the text */
 .email-wrapper {
   position: relative;
-  display: inline-block;
+  display: block; /* Changed from inline-block to take full width */
+  cursor: pointer;
+  width: fit-content;
+}
+
+.user-display-email {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
 }
 
 .tooltip-text {
   visibility: hidden;
-  width: auto;
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 10px;
   position: absolute;
-  z-index: 1;
-  bottom: 125%; /* Position above the email */
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  transition: opacity 0.3s;
-  font-size: 0.75rem;
+  /* Change this to 'top: 100%' if 'bottom' is getting cut off at the top */
+  top: 110%; 
+  left: 0;
+  background-color: #1a1a1a; /* Match your dark theme */
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
   white-space: nowrap;
+  z-index: 9999; /* Force it to the top */
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
   border: 1px solid #444;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  pointer-events: none; /* Prevents the tooltip from flickering */
 }
 
+/* Trigger the effect */
 .email-wrapper:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
