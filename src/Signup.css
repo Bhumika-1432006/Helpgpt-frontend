@@ -194,6 +194,7 @@
   cursor: pointer;
   transition: background 0.3s ease;
   margin-top: 10px;
+  align-content: center;
 }
 
 .signup-box button:hover {
