@@ -1,29 +1,34 @@
-import './ChatWindow.css';
-import { useContext, useState, useEffect} from 'react';
-import { MyContext } from './MyContent';
+import "./ChatWindow.css";
+import { useContext, useState, useEffect } from "react";
+import { MyContext } from "./MyContent";
 // import {HashLoader} from "react-spinners";
 
 import { ScaleLoader } from "react-spinners";
-import Chat from './Chat.jsx'
+import Chat from "./Chat.jsx";
 
 function ChatWindow() {
-  const { 
-    prompt, setPrompt, 
-    reply, setReply,
+  const {
+    prompt,
+    setPrompt,
+    reply,
+    setReply,
     currThreadId,
-    prevChats, setPrevChats,
-    theme, setTheme,
-    showSidebar, setShowSidebar 
+    prevChats,
+    setPrevChats,
+    theme,
+    setTheme,
+    showSidebar,
+    setShowSidebar,
   } = useContext(MyContext);
 
   const [loading, setLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false); 
+  const [isOpen, setIsOpen] = useState(false);
   // ADDED: State to hold user info
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
-    document.body.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    document.body.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
   }, [theme]);
 
   // ADDED: Fetch user data when dropdown opens
@@ -32,7 +37,9 @@ function ChatWindow() {
       const userId = localStorage.getItem("userId");
       if (isOpen && userId && !userInfo) {
         try {
-          const response = await fetch(`https://helpgpt-backend.onrender.com/api/user/${userId}`);
+          const response = await fetch(
+            `https://helpgpt-backend.onrender.com/api/user/${userId}`,
+          );
           const data = await response.json();
           setUserInfo(data);
         } catch (err) {
@@ -45,7 +52,7 @@ function ChatWindow() {
 
   const handleLogout = () => {
     localStorage.removeItem("userId");
-    window.location.reload(); 
+    window.location.reload();
   };
 
   if (!setPrompt) return null;
@@ -55,46 +62,51 @@ function ChatWindow() {
     setLoading(true);
     const options = {
       method: "POST",
-      headers: { "Content-Type" : "application/json" },
-      body: JSON.stringify({ 
-        message: prompt, 
-        threadId: currThreadId, 
-        userId: userId 
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: prompt,
+        threadId: currThreadId,
+        userId: userId,
+      }),
     };
 
     try {
-      const response = await fetch("https://helpgpt-backend.onrender.com/api/chat", options);
+      const response = await fetch(
+        "https://helpgpt-backend.onrender.com/api/chat",
+        options,
+      );
       const res = await response.json();
       setReply(res.reply);
-    } catch(err) {
+    } catch (err) {
       console.log(err);
     }
     setLoading(false);
-  }
+  };
 
   useEffect(() => {
     if (prompt && reply) {
-      setPrevChats(prevChats => [
+      setPrevChats((prevChats) => [
         ...prevChats,
         { role: "user", content: prompt },
-        { role: "assistant", content: reply }
+        { role: "assistant", content: reply },
       ]);
     }
     setPrompt("");
   }, [reply]);
 
   return (
-    <div 
-      className="chat-window" 
-      onClick={() => { if(showSidebar) setShowSidebar(false) }}
+    <div
+      className="chat-window"
+      onClick={() => {
+        if (showSidebar) setShowSidebar(false);
+      }}
     >
       <div className="navbar">
         <div className="nav-left">
-          <i 
-            className="fa-solid fa-bars menu-toggle-icon" 
+          <i
+            className="fa-solid fa-bars menu-toggle-icon"
             onClick={(e) => {
-              e.stopPropagation(); 
+              e.stopPropagation();
               setShowSidebar(!showSidebar);
             }}
           ></i>
@@ -102,11 +114,14 @@ function ChatWindow() {
             HelpGPT <i className="fa-solid fa-angle-down"></i>
           </span>
         </div>
-        
-        <div className="userIconDiv" onClick={(e) => {
-          e.stopPropagation(); 
-          setIsOpen(prev => !prev);
-        }}>
+
+        <div
+          className="userIconDiv"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsOpen((prev) => !prev);
+          }}
+        >
           <span className="userIcon">
             <i className="fa-solid fa-user"></i>
           </span>
@@ -119,13 +134,19 @@ function ChatWindow() {
           {userInfo && (
             <div className="user-info-display">
               <p className="user-display-name">{userInfo.username}</p>
-              <p className="user-display-email">{userInfo.email}</p>
+              <p className="user-display-email" title={userInfo.email}>
+                {userInfo.email}
+              </p>
               <hr />
             </div>
           )}
-          
-          <div className="dropDownItem" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-            <i className="fa-solid fa-gear"></i> Toggle {theme === 'dark' ? 'Light' : 'Dark'} Mode
+
+          <div
+            className="dropDownItem"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            <i className="fa-solid fa-gear"></i> Toggle{" "}
+            {theme === "dark" ? "Light" : "Dark"} Mode
           </div>
 
           <div className="dropDownItem logout" onClick={handleLogout}>
@@ -137,21 +158,21 @@ function ChatWindow() {
       <Chat />
 
       {/* <HashLoader color={theme === 'dark' ? '#fff' : '#000'} loading={loading} /> */}
-      <ScaleLoader 
-  color={theme === 'dark' ? '#fff' : '#000'} 
-  loading={loading} 
-  height={20} 
-  width={3} 
-  radius={2} 
-  margin={2}
-/>
+      <ScaleLoader
+        color={theme === "dark" ? "#fff" : "#000"}
+        loading={loading}
+        height={20}
+        width={3}
+        radius={2}
+        margin={2}
+      />
       <div className="chatInput" onClick={(e) => e.stopPropagation()}>
         <div className="inputbox">
           <input
             placeholder="Ask anything"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" ? getReply() : ''}
+            onKeyDown={(e) => (e.key === "Enter" ? getReply() : "")}
           />
           <div id="submit" onClick={getReply}>
             <i className="fa-solid fa-paper-plane"></i>

@@ -318,3 +318,26 @@ input {
     color: #ff4d4d;
     margin-top: 5px;
 }
+.user-display-email {
+  font-size: 0.85rem;      /* Slightly smaller font helps */
+  color: #888;             /* Muted color for better hierarchy */
+  
+  /* The "Magic" Trio for overflow: */
+  max-width: 180px;        /* Fix this to the width of your box */
+  white-space: nowrap;     /* Prevents the email from wrapping to a new line */
+  overflow: hidden;        /* Hides the text that goes past the box */
+  text-overflow: ellipsis; /* Automatically adds the "..." at the end */
+  
+  display: block;          /* Ensures the width and overflow work correctly */
+}
+
+.user-display-name {
+  font-weight: bold;
+  margin-bottom: 2px;
+  text-transform: capitalize; /* Makes "bhumi" look like "Bhumi" */
+}
+
+.user-info-display {
+  padding: 10px;
+  width: 200px;            /* Set a consistent width for the dropdown box */
+}
