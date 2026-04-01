@@ -448,3 +448,70 @@ startNewChat {
         margin-top: 15vh;
     }
 }
+/* 1. Fluid Chat Container */
+.chats {
+    width: 100%;
+    max-width: 800px; /* Limits width on desktop so it's readable */
+    margin: 0 auto;   /* Centers the chat column */
+    padding: 20px;    /* Reasonable padding for all screens */
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;        /* Space between message rows */
+    box-sizing: border-box;
+}
+
+/* 2. User Row Logic (The right-side alignment) */
+.userDiv {
+    display: flex;
+    justify-content: flex-end; /* Pushes everything in this row to the right */
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.userMessageContainer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    max-width: 100%; /* Occupies the full row width */
+}
+
+/* 3. The User Bubble (The actual fix) */
+.userMessage {
+    background-color: var(--input-bg);
+    padding: 12px 18px;
+    border-radius: 18px 18px 2px 18px;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    
+    /* --- REMOVED: margin-left: 15rem (This was causing the stacking) --- */
+    
+    max-width: 80%;    /* Bubble will never take more than 80% of screen */
+    width: fit-content; /* Shrinks to fit short text like "hi" */
+    
+    /* --- Ensures text wraps as a statement, not letters --- */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap; 
+    line-height: 1.5;
+}
+
+/* 4. Mobile Responsiveness (Screen < 600px) */
+@media (max-width: 600px) {
+    .chats {
+        padding: 10px; /* Tighter padding for mobile */
+    }
+    
+    .userMessage {
+        max-width: 90%;   /* Gives statement more room on tiny screens */
+        font-size: 0.95rem; 
+        padding: 10px 14px;
+    }
+
+    .startNewChat {
+        font-size: 1.5rem;
+        margin-top: 15vh;
+        text-align: center;
+    }
+}
