@@ -134,9 +134,10 @@ function ChatWindow() {
           {userInfo && (
             <div className="user-info-display">
               <p className="user-display-name">{userInfo.username}</p>
-              <p className="user-display-email" title={userInfo.email}>
-                {userInfo.email}
-              </p>
+              <div className="email-wrapper">
+                <p className="user-display-email">{userInfo.email}</p>
+                <span className="tooltip-text">{userInfo.email}</span>
+              </div>
               <hr />
             </div>
           )}
