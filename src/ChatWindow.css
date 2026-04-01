@@ -323,7 +323,7 @@ input {
   color: #888;             /* Muted color for better hierarchy */
   
   /* The "Magic" Trio for overflow: */
-  max-width: 180px;        /* Fix this to the width of your box */
+  max-width: 100px;        /* Fix this to the width of your box */
   white-space: nowrap;     /* Prevents the email from wrapping to a new line */
   overflow: hidden;        /* Hides the text that goes past the box */
   text-overflow: ellipsis; /* Automatically adds the "..." at the end */
