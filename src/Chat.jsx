@@ -73,8 +73,7 @@ function Chat() {
 
   return (
     <div className="container">
-      {newChat && <h1 className="startNewChat">How can I help you today?</h1>}
-
+      {prevChats.length === 0 && <h1 className="startNewChat">How can I help you today?</h1>}
       <div className="chats">
         {prevChats?.map((chat, idx) => {
           const isLastAssistant = idx === prevChats.length - 1 && chat.role === "assistant";
