@@ -16,16 +16,40 @@ function ChatWindow() {
 
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false); 
+  // ADDED: State to hold user info
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
     document.body.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  // ADDED: Fetch user data when dropdown opens
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userId = localStorage.getItem("userId");
+      if (isOpen && userId && !userInfo) {
+        try {
+          const response = await fetch(`https://helpgpt-backend.onrender.com/api/user/${userId}`);
+          const data = await response.json();
+          setUserInfo(data);
+        } catch (err) {
+          console.log("Error fetching user:", err);
+        }
+      }
+    };
+    fetchUser();
+  }, [isOpen]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    window.location.reload(); 
+  };
+
   if (!setPrompt) return null;
 
   const getReply = async () => {
-    const userId = localStorage.getItem("userId"); // ADDED THIS LINE
+    const userId = localStorage.getItem("userId");
     setLoading(true);
     const options = {
       method: "POST",
@@ -33,7 +57,7 @@ function ChatWindow() {
       body: JSON.stringify({ 
         message: prompt, 
         threadId: currThreadId, 
-        userId: userId // ADDED userId TO THE BODY
+        userId: userId 
       })
     };
 
@@ -65,12 +89,10 @@ function ChatWindow() {
     >
       <div className="navbar">
         <div className="nav-left">
-          {/* This is the Hamburger Icon */}
           <i 
             className="fa-solid fa-bars menu-toggle-icon" 
             onClick={(e) => {
-              e.stopPropagation(); // Prevents the window click from instantly closing it
-              console.log("Button clicked!");
+              e.stopPropagation(); 
               setShowSidebar(!showSidebar);
             }}
           ></i>
@@ -80,7 +102,7 @@ function ChatWindow() {
         </div>
         
         <div className="userIconDiv" onClick={(e) => {
-          e.stopPropagation(); // Prevents clicking the user icon from closing the sidebar
+          e.stopPropagation(); 
           setIsOpen(prev => !prev);
         }}>
           <span className="userIcon">
@@ -91,8 +113,21 @@ function ChatWindow() {
 
       {isOpen && (
         <div className="dropDown" onClick={(e) => e.stopPropagation()}>
+          {/* UPDATED: User Info Display */}
+          {userInfo && (
+            <div className="user-info-display">
+              <p className="user-display-name">{userInfo.username}</p>
+              <p className="user-display-email">{userInfo.email}</p>
+              <hr />
+            </div>
+          )}
+          
           <div className="dropDownItem" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
             <i className="fa-solid fa-gear"></i> Toggle {theme === 'dark' ? 'Light' : 'Dark'} Mode
+          </div>
+
+          <div className="dropDownItem logout" onClick={handleLogout}>
+            <i className="fa-solid fa-right-from-bracket"></i> Logout
           </div>
         </div>
       )}
