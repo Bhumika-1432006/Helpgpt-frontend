@@ -5,8 +5,9 @@ import "./Signup.css";
 function Signup({ onAuthSuccess }) {
   const { theme } = useContext(MyContext);
   
-  // --- NEW: Toggle between Signup and Login ---
   const [isLogin, setIsLogin] = useState(false); 
+  // NEW: State for styled status messages
+  const [status, setStatus] = useState({ text: "", type: "" });
 
   const [formData, setFormData] = useState({
     username: "",
@@ -20,8 +21,8 @@ function Signup({ onAuthSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setStatus({ text: "", type: "" }); // Clear messages on new attempt
 
-    // Determine which API to call based on the mode
     const endpoint = isLogin ? "login" : "signup";
 
     try {
@@ -36,17 +37,27 @@ function Signup({ onAuthSuccess }) {
       if (response.ok) {
         localStorage.setItem("userId", data.userId);
         
-        // Custom message based on mode
-        const message = isLogin ? `Welcome back!` : `Welcome, ${data.username}! Account created!`;
-        alert(message);
+        // --- STYLED SUCCESS MESSAGE ---
+        setStatus({ 
+          text: isLogin ? "Welcome back! Redirecting..." : `Welcome, ${data.username}! Account created!`, 
+          type: "success" 
+        });
         
-        if(onAuthSuccess) onAuthSuccess(); 
+        // Delay redirect by 1.5s so user can see the success style
+        setTimeout(() => {
+          if(onAuthSuccess) onAuthSuccess(); 
+        }, 1500);
+
       } else {
-        alert(data.error || `${isLogin ? "Login" : "Signup"} failed`);
+        // --- STYLED ERROR MESSAGE ---
+        setStatus({ 
+          text: data.error || `${isLogin ? "Login" : "Signup"} failed`, 
+          type: "error" 
+        });
       }
     } catch (err) {
       console.log("Auth Error:", err);
-      alert("Something went wrong with the server.");
+      setStatus({ text: "Something went wrong with the server.", type: "error" });
     }
   };
 
@@ -57,12 +68,17 @@ function Signup({ onAuthSuccess }) {
   return (
     <div className={`signup-container ${theme}`}>
       <div className="signup-box">
-        {/* Dynamic Heading */}
         <h2>{isLogin ? "Welcome Back" : "Welcome to HelpGPT"}</h2>
         <p>{isLogin ? "Log in to your account" : "Create your account to continue"}</p>
 
+        {/* --- DYNAMIC STATUS MESSAGE BANNER --- */}
+        {status.text && (
+          <div className={`auth-status-banner ${status.type}`}>
+            {status.text}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
-          {/* Hide Username field if in Login mode */}
           {!isLogin && (
             <input
               type="text"
@@ -92,10 +108,12 @@ function Signup({ onAuthSuccess }) {
           <button type="submit">{isLogin ? "Log In" : "Sign Up"}</button>
         </form>
 
-        {/* Toggle Switch */}
         <p className="login-note">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-          <span className="link" onClick={() => setIsLogin(!isLogin)}>
+          <span className="link" onClick={() => {
+            setIsLogin(!isLogin);
+            setStatus({ text: "", type: "" }); // Clear message when switching modes
+          }}>
             {isLogin ? "Sign up" : "Log in"}
           </span>
         </p>

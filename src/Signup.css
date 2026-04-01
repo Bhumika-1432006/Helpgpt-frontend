@@ -276,3 +276,33 @@
   padding: 0;
   margin: 0;
 }
+.auth-status-banner {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  box-sizing: border-box;
+  animation: fadeInDown 0.3s ease;
+}
+
+/* Success: Using your ChatGPT Green (#10a37f) */
+.auth-status-banner.success {
+  background-color: rgba(16, 163, 127, 0.1);
+  color: #10a37f;
+  border: 1px solid rgba(16, 163, 127, 0.3);
+}
+
+/* Error: Soft Red */
+.auth-status-banner.error {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
