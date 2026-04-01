@@ -341,3 +341,32 @@ input {
   padding: 10px;
   width: 200px;            /* Set a consistent width for the dropdown box */
 }
+.email-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: auto;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the email */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  border: 1px solid #444;
+}
+
+.email-wrapper:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
