@@ -2,9 +2,12 @@ import { useState, useContext, useEffect } from "react";
 import { MyContext } from "./MyContent";
 import "./Signup.css";
 
-// ADDED: Destructured onAuthSuccess from props
 function Signup({ onAuthSuccess }) {
   const { theme } = useContext(MyContext);
+  
+  // --- NEW: Toggle between Signup and Login ---
+  const [isLogin, setIsLogin] = useState(false); 
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -18,8 +21,11 @@ function Signup({ onAuthSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Determine which API to call based on the mode
+    const endpoint = isLogin ? "login" : "signup";
+
     try {
-      const response = await fetch("https://helpgpt-backend.onrender.com/api/signup", {
+      const response = await fetch(`https://helpgpt-backend.onrender.com/api/${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -29,15 +35,17 @@ function Signup({ onAuthSuccess }) {
 
       if (response.ok) {
         localStorage.setItem("userId", data.userId);
-        alert(`Welcome, ${data.username}! Account created successfully!`);
         
-        // --- UPDATED: Tell App.js to hide the overlay ---
+        // Custom message based on mode
+        const message = isLogin ? `Welcome back!` : `Welcome, ${data.username}! Account created!`;
+        alert(message);
+        
         if(onAuthSuccess) onAuthSuccess(); 
       } else {
-        alert(data.error || "Signup failed");
+        alert(data.error || `${isLogin ? "Login" : "Signup"} failed`);
       }
     } catch (err) {
-      console.log("Signup Error:", err);
+      console.log("Auth Error:", err);
       alert("Something went wrong with the server.");
     }
   };
@@ -49,18 +57,22 @@ function Signup({ onAuthSuccess }) {
   return (
     <div className={`signup-container ${theme}`}>
       <div className="signup-box">
-        <h2>Welcome to HelpGPT</h2>
-        <p>Create your account to continue</p>
+        {/* Dynamic Heading */}
+        <h2>{isLogin ? "Welcome Back" : "Welcome to HelpGPT"}</h2>
+        <p>{isLogin ? "Log in to your account" : "Create your account to continue"}</p>
 
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
+          {/* Hide Username field if in Login mode */}
+          {!isLogin && (
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          )}
           <input
             type="email"
             name="email"
@@ -77,11 +89,15 @@ function Signup({ onAuthSuccess }) {
             onChange={handleChange}
             required
           />
-          <button type="submit">Sign Up</button>
+          <button type="submit">{isLogin ? "Log In" : "Sign Up"}</button>
         </form>
 
+        {/* Toggle Switch */}
         <p className="login-note">
-          Already have an account? <span className="link">Log in</span>
+          {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+          <span className="link" onClick={() => setIsLogin(!isLogin)}>
+            {isLogin ? "Sign up" : "Log in"}
+          </span>
         </p>
       </div>
     </div>
