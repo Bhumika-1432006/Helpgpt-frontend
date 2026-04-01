@@ -197,13 +197,16 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
-  margin-top: 10px;
- 
+  margin: 10px 0 0 0; /* Ensures 0 margin on left/right */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Add this to be safe */
+  align-self: center;
 }
 
 .signup-box button:hover {
   background-color: #0d8a6a;
-  align-items: center;
 }
 
 .login-note {
@@ -218,39 +221,72 @@
   font-weight: 500;
   text-decoration: underline;
 }
-.signup-box button:hover {
-  background-color: #0d8a6a; /* Darker green on hover */
-  transform: translateY(-1px); /* Subtle lift effect */
-  box-shadow: 0 4px 12px rgba(16, 163, 127, 0.2);
-}
-
-.signup-box button:active {
-  background-color: #0b7a5d;
-  transform: translateY(0); /* Returns to normal when clicked */
-}
-
-/* Optional: Disabled state for when the form is submitting */
-.signup-box button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-/* Extra touch: Smooth transition for all properties */
-.signup-box button {
+.signup-box {
+  background: #171717;
+  padding: 40px; /* Uniform padding on all sides */
+  border-radius: 16px;
   width: 100%;
-  padding: 14px;
-  background-color: #10a37f;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: all 0.2s ease; /* Updated from 'background' to 'all' */
+  max-width: 400px; /* Limits size so it doesn't look stretched */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.signup-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 1. Global fix for the box model */
+.signup-box, 
+.signup-box * {
+  box-sizing: border-box; 
+}
+
+.signup-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the form and headings */
+  padding: 40px;
+  /* ... existing background/border styles ... */
+}
+
+.signup-form {
+  width: 100%; /* Ensures the form spans the box */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 2. Fix the Input & Button width conflict */
+.signup-box input, 
+.signup-box button {
+  width: 100%;           /* They now share the exact same base */
+  margin-left: 0;        /* Explicitly remove any shifts */
+  margin-right: 0;
+  display: block;
+}
+
+.signup-box button {
+  /* This centers the "Sign Up" / "Log In" text perfectly */
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  
+  padding: 14px;
+  background-color: #10a37f;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+
+/* 3. Button Hover Glow */
+.signup-box button:hover {
+  background-color: #0d8a6a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 163, 127, 0.2);
 }
