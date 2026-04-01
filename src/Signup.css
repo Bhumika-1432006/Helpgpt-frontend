@@ -214,3 +214,39 @@
   font-weight: 500;
   text-decoration: underline;
 }
+.signup-box button:hover {
+  background-color: #0d8a6a; /* Darker green on hover */
+  transform: translateY(-1px); /* Subtle lift effect */
+  box-shadow: 0 4px 12px rgba(16, 163, 127, 0.2);
+}
+
+.signup-box button:active {
+  background-color: #0b7a5d;
+  transform: translateY(0); /* Returns to normal when clicked */
+}
+
+/* Optional: Disabled state for when the form is submitting */
+.signup-box button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Extra touch: Smooth transition for all properties */
+.signup-box button {
+  width: 100%;
+  padding: 14px;
+  background-color: #10a37f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.2s ease; /* Updated from 'background' to 'all' */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
