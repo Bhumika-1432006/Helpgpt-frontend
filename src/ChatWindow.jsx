@@ -1,7 +1,9 @@
 import './ChatWindow.css';
 import { useContext, useState, useEffect} from 'react';
 import { MyContext } from './MyContent';
-import {HashLoader} from "react-spinners";
+// import {HashLoader} from "react-spinners";
+
+import { ScaleLoader } from "react-spinners";
 import Chat from './Chat.jsx'
 
 function ChatWindow() {
@@ -134,8 +136,15 @@ function ChatWindow() {
 
       <Chat />
 
-      <HashLoader color={theme === 'dark' ? '#fff' : '#000'} loading={loading} />
-
+      {/* <HashLoader color={theme === 'dark' ? '#fff' : '#000'} loading={loading} /> */}
+      <ScaleLoader 
+  color={theme === 'dark' ? '#fff' : '#000'} 
+  loading={loading} 
+  height={20} 
+  width={3} 
+  radius={2} 
+  margin={2}
+/>
       <div className="chatInput" onClick={(e) => e.stopPropagation()}>
         <div className="inputbox">
           <input
